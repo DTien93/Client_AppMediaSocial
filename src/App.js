@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext } from 'react'
+import Home from './pages/Home/Home'
+import Login from './pages/Login/Login'
+import Profile from './pages/Profile/Profile'
+import Messenger from './pages/Messenger/Messenger'
+import Register from './pages/Register/Register'
 
-function App() {
+import { AuthContext } from './context/AuthContext'
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate
+} from 'react-router-dom'
+
+const App = () => {
+  const {user} = useContext(AuthContext)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+    <Routes>
+        <Route exact path='/'   element={user ? <Home/> : <Login />}/>
+        <Route exact path='/login'   element={user ? <Navigate to ='/'/> : <Login />}/>
+        <Route exact path='/register'   element={user ? <Navigate to ='/'/> : <Register />}/>
+        <Route path='/profile/:username' element={<Profile />} />
+        <Route path='/messenger'   element={!user ? <Navigate to ='/'/> : <Messenger />} />
+    </Routes>
+  </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
